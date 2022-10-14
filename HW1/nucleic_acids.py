@@ -1,7 +1,17 @@
 
-def transcribe(seq):   # DNA --> RNA
+def RNA_DNA_check(seq):
 
-    if not(set(seq).issubset(set('ATGCatgc'))):
+    if set(seq).issubset(set('ATGCatgc')):
+        return "DNA"
+    elif set(seq).issubset(set('AUGCaugc')):
+        return "RNA"
+    else:
+        return 'Wrong alphabet! Make sure that input is DNA or RNA'
+
+
+def transcribe(seq, na):   # DNA --> RNA
+
+    if na != "DNA":
         return 'Wrong alphabet! Make sure that input = DNA'
 
     else:
@@ -12,30 +22,24 @@ def transcribe(seq):   # DNA --> RNA
         return "".join([tr_dict[i] for i in seq])
 
 
-def rev_transcr(seq):  # RNA --> DNA
+def rev_transcr(seq, na):  # RNA --> DNA
 
-    if not(set(seq).issubset(set('AUGCaugc'))):
+    if na != "RNA":
         return 'Wrong alphabet! Make sure that input = RNA'
 
     else:
-        tr_dict = {
+        tr_dict_rev = {
             "A": "A", "a": "a", "U": "T", "u": "t",
             "G": "G", "g": "g", "C": "C", "c": "c"
         }
-        return "".join([tr_dict[i] for i in seq])
+        return "".join([tr_dict_rev[i] for i in seq])
 
 
-def reverse(seq):  # input --> reversed sequence
-
-    # check for DNA or RNA alphabet
-    if set(seq).issubset(set('ATGCatgc')) or set(seq).issubset(set('AUGCaugc')):
-        return seq[::-1]
-
-    else:
-        return 'Wrong alphabet!'
+def reverse(seq, na):  # input --> reversed sequence
+    return seq[::-1]
 
 
-def complement(seq):  # DNA/RNA --> complement DNA/RNA
+def complement(seq, na):  # DNA/RNA --> complement DNA/RNA
 
     dict_DNA = {
         "A": "T", "a": "t", "T": "A", "t": "a",
@@ -43,23 +47,20 @@ def complement(seq):  # DNA/RNA --> complement DNA/RNA
     }
 
     dict_RNA = {
-        "A": "T", "a": "t", "T": "A", "t": "a",
+        "A": "U", "a": "u", "U": "A", "u": "a",
         "G": "C", "g": "c", "C": "G", "c": "g"
     }
 
-    if set(seq).issubset(set('ATGCatgc')):  # DNA case
+    if na == "DNA":  # DNA case
         return "".join([dict_DNA[i] for i in seq])
 
-    elif set(seq).issubset(set('AUGCaugc')):  # RNA case
+    else:  # RNA case
         return "".join([dict_RNA[i] for i in seq])
 
-    else:
-        return 'Wrong alphabet!'
 
+def first_orf(s, na):  # DNA --> finding the first reading frame
 
-def first_orf(s):  # DNA --> finding the first reading frame
-
-    if not(set(seq).issubset(set('ATGCatgc'))):
+    if na != "DNA":
         return 'Wrong alphabet! Make sure that input = DNA'
 
     n = len(s)
@@ -83,25 +84,21 @@ def first_orf(s):  # DNA --> finding the first reading frame
     return s[s.find("ATG"):]
 
 
-def translate(seq):  # RNA/DNA --> DNA --> first ORF --> RNA --> protein
+def translate(seq, na):  # RNA/DNA --> DNA --> first ORF --> RNA --> protein
 
-    if not (set(seq).issubset(set('AUGCaugc')) or
-            set(seq).issubset(set('ATGCatgc'))):
-        return 'Wrong alphabet! Try one more time!'
-
-    elif set(seq).issubset(set('AUGCaugc')):  # RNA case
-        seq_dna = rev_transcr(seq)
+    if na == "RNA":  # RNA case
+        seq_dna = rev_transcr(seq, na)
 
     else:
         seq_dna = seq
 
-    orf = first_orf(seq_dna)  # find the ORF
+    orf = first_orf(seq_dna, na="DNA")  # find the ORF
     orf = orf[:(len(orf) // 3) * 3]  # if the are no stop codons --> cut to :3
 
     if orf[0] == "N":  # no reading frames :(
         return orf
 
-    rna = transcribe(orf)  # obtain RNA
+    rna = transcribe(orf, na="DNA")  # obtain RNA
 
     transl_dict = {'AAA': 'K', 'AAC': 'N', 'AAG': 'K', 'AAU': 'N', 'ACA': 'T',
                    'ACC': 'T', 'ACG': 'T', 'AGA': 'R', 'AGC': 'S', 'AGG': 'R',
@@ -129,13 +126,14 @@ def translate(seq):  # RNA/DNA --> DNA --> first ORF --> RNA --> protein
     return ''.join(protein)
 
 
-def rev_compl(seq):
-    return reverse(complement(seq))
+def rev_compl(seq, na):
+    return reverse(complement(seq, na), na)
 
 
 command = input("Enter command: ")
 
 command_dict = {"transcribe": transcribe,
+                "reverse transcription": rev_transcr,
                 "reverse": reverse,
                 "complement": complement,
                 "reverse complement": rev_compl,
@@ -148,8 +146,14 @@ while command != "exit":
         print("Cannot find this command :( try again!")
     else:
         seq = str(input("Enter sequence: "))
-        print(command_dict[command](seq))
+        NA = RNA_DNA_check(seq)
+
+        if NA == "RNA" or NA == "DNA":
+            print(command_dict[command](seq, NA))
+        else:
+            print(NA)
 
     command = input("Enter command: ")
 
 print("Good luck, see you later!")
+
