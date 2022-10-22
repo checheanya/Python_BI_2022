@@ -4,36 +4,42 @@ def read_from_file(input_fastq):
     :return: list length = number of reads, on each position - sublist with information on
     [0] name [1] sequence [2] separator [3] quality
     """
-    reads_list = []
-    with open(input_fastq, 'r') as file:
-        lines = file.readlines()
+    reads_list = {'name': [], 'sequence': [], 'separator': [], 'quality': []}
 
-    for read_no in range((len(lines) // 4)):
-        if read_no == (len(lines) // 4) - 1 and lines[read_no * 4 + 3][-1] != "\n":
-            reads_list.append([lines[read_no * 4][:-1], lines[read_no * 4 + 1][:-1], lines[read_no * 4 + 2][:-1],
-                               lines[read_no * 4 + 3]])
-        else:
-            reads_list.append([lines[read_no*4][:-1], lines[read_no*4 + 1][:-1], lines[read_no*4 + 2][:-1],
-                               lines[read_no*4 + 3][:-1]])
+    with open(input_fastq, 'r') as file:
+        while True:
+            if not file.readline().strip():
+                break
+            reads_list['name'].append(file.readline().strip())
+            reads_list['sequence'].append(file.readline().strip())
+            reads_list['separator'].append(file.readline().strip())
+            reads_list['quality'].append(file.readline().strip())
 
     return reads_list
 
 
-def GC_check(read, gc_bounds):
+def gc_check(read, gc_bounds):
     """
     :param read: the read to be checked for the GC-content
     :param gc_bounds: admissible limits of the GC-content (percentage)
     :return: True if the GC content fits the limits, False if not
     """
+    if not isinstance(gc_bounds, tuple):
+        gc_bounds = (0, gc_bounds)
+
     if len(gc_bounds) == 2:
         max_border = gc_bounds[1]
         min_border = gc_bounds[0]
     else:
         max_border = gc_bounds[0]
         min_border = 0
-    gc_percent = 100 * (read.count("C") + read.count("G")) / len(read)
 
-    return max_border >= gc_percent >= min_border
+    gc_count = 0
+    for letter in read:
+        if letter in {'G', 'C'}:
+            gc_count += 1
+
+    return max_border >= (100 * (gc_count / len(read))) >= min_border
 
 
 def length_check(read, length_bounds):
@@ -42,6 +48,9 @@ def length_check(read, length_bounds):
     :param length_bounds: admissible limits of length for a read
     :return: True if the length fits the limits, False if not
     """
+    if not isinstance(length_bounds, tuple):
+        length_bounds = (0, length_bounds)
+
     if len(length_bounds) == 2:
         max_length = length_bounds[1]
         min_border = length_bounds[0]
@@ -89,23 +98,24 @@ def main(input_fastq, output_file_prefix, gc_bounds=(0, 100),
     and a fastq file with removed reads ({output_file_prefix}_failed.fastq) if save_filtered = True
     """
 
-    reads_list_full = read_from_file(input_fastq)
+    reads_dict_full = read_from_file(input_fastq)
 
     passed_reads = []
     failed_reads = []
 
-    for read_no in range(len(reads_list_full)):
-        read = reads_list_full[read_no][1]
-        quality_check = avg_quality(reads_list_full[read_no][3]) >= quality_threshold
+    for read_no in range(len(reads_dict_full['name'])):
+        read = reads_dict_full['name'][read_no]
+        quality_check = avg_quality(reads_dict_full['quality'][read_no]) >= quality_threshold
 
-        check_score = (GC_check(read, gc_bounds) and
+        check_score = (gc_check(read, gc_bounds) and
                        length_check(read, length_bounds) and
                        quality_check)
 
         if check_score:
-            passed_reads += reads_list_full[read_no]
+            passed_reads += [reads_dict_full[key][read_no] for key in reads_dict_full.keys()]
+
         else:
-            failed_reads += reads_list_full[read_no]
+            failed_reads += [reads_dict_full[key][read_no] for key in reads_dict_full.keys()]
 
     write_to_file(output_file_prefix, "passed", passed_reads)
 
