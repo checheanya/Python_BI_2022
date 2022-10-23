@@ -1,5 +1,5 @@
-This repo is designed for the proper installation and running of the ultraviolence.py script. In order to run the script follow the instructions below.
-The instructions were checked and created on the Ubuntu 18.04.6 LTS (bionic).
+This repo is designed for the proper installation and running of the *ultraviolence.py* script. In order to run the script follow the instructions below.
+The instructions were checked and created on the **Ubuntu 18.04.6 LTS (bionic)**.
 
 The ultraviolence.py file could be downloaded by running the command:
 ```console
@@ -67,7 +67,7 @@ You can install them by running (you might need to change the locations of the f
 $ pip install -r ./Python_BI_2022/HW3/requirements.txt
 ```
 
-And finally you can run the ultraviolence.py by running this command:
+And finally you can run the *ultraviolence.py* by running this command:
 ```console
 $ python ./Python_BI_2022/HW3/ultraviolence.py
 ```
