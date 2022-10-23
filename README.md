@@ -26,3 +26,9 @@ The program called "fastq_filtrator.py" is written without using any side-librar
 * *length_bounds* — tuple of two values, length limits for each read (0, 2**32) on default.
 * *quality_threshold* — threshold for the average mean quality for each read, the decoding of the fastq quality marks is done according to phred33 scale (default quality_threshold = 0)
 * *save_filtered* — if True, additional file with filtered out reads will be returned (default save_filtered = False)
+
+## Homework 3 (environments)
+
+This repo conteins ultraviolence.py script and the requirements file to run this script. 
+You can find the instructions in the HW3 repo under the corresponding brunch.
+
