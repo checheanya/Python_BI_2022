@@ -53,16 +53,8 @@ $ source violent_env/bin/activate
 
 ## Packages
 
-This file requires special versions of some packages:
-* aiohttp==3.8.3
-* beautifulsoup4==4.11.1
-* biopython==1.77
-* google-api-python-client==2.65.0
-* lxml==4.9.1
-* opencv-python==4.6.0.66
-* pandas==1.4.3 (it takes a while to install it but it works, you just have to wait for a bit)
+This file requires special versions of some packages. You can install them by running (you might need to change the locations of the folder):
 
-You can install them by running (you might need to change the locations of the folder):
 ```console
 $ pip install -r ./Python_BI_2022/HW3/requirements.txt
 ```
