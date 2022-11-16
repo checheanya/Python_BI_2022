@@ -64,7 +64,7 @@ def multiply_matrices(matrix_list):
 # we can calculate distance using Pythagorean theorem but the easier way is using l2 norm which we will use in the next task
 
 def compute_2d_distance(point1, point2):
-    dist = np.sqrt((point2[0] - point1[0])**2 + (point2[1] - point1[1])**2)
+    dist = ((point2 - point1)**2).sum()**0.5
     return dist
 
 
