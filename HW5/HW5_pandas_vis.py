@@ -119,7 +119,7 @@ rrna_full_cov.shape
 
 """## Задание 2. Кастомизация графиков (20 баллов)
 
-### Violin plot
+### Volcano plot
 """
 
 path = "./Python_BI_2022/HW5/data/diffexpr_data.tsv.gz"
