@@ -142,11 +142,7 @@ class BiologicalSequence(ABC):
     def __getitem__(self, slc):
         # returns i-th element of the sequence, call: obj[i] OR
         # slice from start to stop with step=step
-        if isinstance(slc, int):
-            return self.seq[slc]  
-        elif isinstance(slc, slice):
-            new_slice = slice(slc.start, slc.stop, slc.step) # can delete this line actually...
-            return self.seq[new_slice]
+            return self.seq[slc]
     
     def __str__(self):
         # returns sequence as a string, call: str()
