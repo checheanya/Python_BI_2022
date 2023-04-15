@@ -177,7 +177,7 @@ class NucleotideSequence(BiologicalSequence):
     
     def complement(self):
         # returns a complementary sequence
-        return ''.join([self.comp_dict[i] for i in self.seq])
+        return type(self)(''.join([self.comp_dict[i] for i in self.seq]))
     
     def gc_content(self):
         # returns a GC-content of the sequence
