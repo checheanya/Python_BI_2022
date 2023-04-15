@@ -61,7 +61,7 @@ import math
 def read_gff(path):
     gff_dataframe = pd.read_table(path, names = [
         "chromosome", "source", "type", "start", "end", "score",
-        "strand", "phase", "attributes"], skiprows = [0])  
+        "strand", "phase", "attributes"], comment="#")  
     gff_dataframe["attributes"] = gff_dataframe["attributes"].apply(lambda x: x[5:x.find("S")+1])
 
     return gff_dataframe
