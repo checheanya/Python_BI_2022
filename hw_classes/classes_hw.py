@@ -7,7 +7,7 @@ class Chat(object):
     def __init__(self, name, messages):
         # stores messages from new to old (inverted order) 
         self.chat_name = name
-        self.chat_history = messages[::-1]
+        self.chat_history = sorted(messages, key=lambda mes: mess.datetime, reverse=True)
     
     def show_last_message(self):
         # prints the last message
