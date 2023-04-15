@@ -143,10 +143,8 @@ diff_expr["significance"] = np.select(conditions, values)
 diff_expr.head()
 
 # top-2 genes selection
-down_reg = diff_expr[diff_expr['significance'] == "Significantly downregulated"].sort_values(
-                            by=['logFC']).head(2)
-up_reg = diff_expr[diff_expr['significance'] == "Significantly upregulated"].sort_values(
-                            by=['logFC']).tail(2)
+down_reg = diff_expr[diff_expr['significance'] == "Significantly downregulated"].nsmallest(2, 'logFC')
+up_reg = diff_expr[diff_expr['significance'] == "Significantly upregulated"].nlargest(2, 'logFC')
 top_2_total = pd.concat([down_reg, up_reg])
 top_2_total.reset_index(inplace=True)
 
