@@ -13,7 +13,7 @@ class Chat(object):
         # prints the last message
         self.chat_history[0].show()
     
-    def get_history_from_the_timeperiod(self, start_date, end_date):
+    def get_history_from_the_timeperiod(self, start_date=None, end_date=None):
         # returns messages from the given timeframe
         if isinstance(start_date, datetime) and isinstance(end_date, datetime):
             return Chat(f'{self.chat_name}_subchat', [message for message in self.chat_history if (end_date > message.datetime > start_date)])
